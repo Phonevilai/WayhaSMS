@@ -15,7 +15,7 @@ type SMSRes struct {
 type SMSReq struct {
 	PrivateKey string
 	UserID     string
-	Trans_id   string
+	Trans_ID   string
 	MsisDN     string
 	HeaderSMS  string
 	Message    string

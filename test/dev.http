@@ -1,0 +1,36 @@
+@LTC_base_url = http://ltcservice.laotel.com:5577/Services.asmx?WSDL
+
+###
+#send SMS
+POST {{LTC_base_url}}
+Content-Type: text/xml; charset=utf-8
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://Services.laotel.com/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ser:sendSMS>
+         <!--Optional:-->
+         <ser:msg>
+            <!--Optional:-->
+            <ser:header>
+               <!--Optional:-->
+               <ser:userid>WAYHA</ser:userid>
+               <!--Optional:-->
+               <ser:key>tU/Po8n8vNQC/B72tpLc80RS42gRIGDipOqccRDnxTQ=</ser:key>
+               <!--Optional:-->
+               <ser:trans_id>TEST000444</ser:trans_id>
+               <!--Optional:-->
+               <ser:verson></ser:verson>
+            </ser:header>
+            <!--Optional:-->
+            <ser:msisdn>2076993003</ser:msisdn>
+            <!--Optional:-->
+            <ser:headerSMS>TEST</ser:headerSMS>
+            <!--Optional:-->
+            <ser:message>test</ser:message>
+            <!--Optional:-->
+            <ser:sms_type></ser:sms_type>
+         </ser:msg>
+      </ser:sendSMS>
+   </soapenv:Body>
+</soapenv:Envelope>
