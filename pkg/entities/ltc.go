@@ -20,12 +20,3 @@ type SMSReq struct {
 	HeaderSMS  string
 	Message    string
 }
-
-// var (
-// 	privateKey string = os.Getenv("privateKey")
-// 	userid     string = os.Getenv("userid")
-// 	trans_id   string
-// 	msisdn     string
-// 	headerSMS  string = os.Getenv("headerSMS")
-// 	message    string
-// )

@@ -12,9 +12,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func SendSMS(*entities.SMSReq) (string) {
-	r := entities.SMSReq{}
-	encrypted := Encrypt(&r)
+func SendSMS(r *entities.SMSReq) (string) {
+	encrypted := Encrypt(r.UserID, r.Trans_ID, r.MsisDN, r.PrivateKey)
 	agent := fiber.AcquireAgent()
 	req := agent.Request()
 	req.SetRequestURI(os.Getenv("LTC_URL"))
@@ -40,27 +39,32 @@ func SendSMS(*entities.SMSReq) (string) {
 	</soapenv:Body>
  </soapenv:Envelope>`)
 	if err := agent.Parse(); err != nil {
-		panic(err)
+		// panic(err)
+		fmt.Println(err)
 	}
 	_, body, errs := agent.Bytes() // ...
 	if errs != nil {
-		panic(errs)
+		// panic(errs)
+		fmt.Println(errs)
 	}
+	fmt.Println(string(body))
 	var data entities.SMSRes
 	err := xml.Unmarshal([]byte(body), &data)
 	if err != nil {
-		panic(err.Error())
+		// panic(err.Error())
+		fmt.Println(err.Error())
 	}
-	fmt.Printf("%+v\n", data.DataResponse.SendSMSResponse.SendSMSResult.ResultCode)
+	// fmt.Printf("%+v\n", data.DataResponse.SendSMSResponse.SendSMSResult.ResultCode)
 	return data.DataResponse.SendSMSResponse.SendSMSResult.ResultCode
 }
 
-func Encrypt(r *entities.SMSReq) string {
-	cmd := exec.Command("java", "-jar", os.Getenv("encrypt_path"), r.UserID+r.Trans_ID+r.MsisDN, r.PrivateKey)
+func Encrypt(userID string, Trans_ID string, MsisDN string, PrivateKey string) string {
+	cmd := exec.Command("java", "-jar", os.Getenv("encrypt_path"), userID+Trans_ID+MsisDN, PrivateKey)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Fatalf("cmd.Run() failed with %s\n", err)
 	}
 	encrypted := strings.Trim(string(out), "OK\n")
+	fmt.Println(encrypted)
 	return encrypted
 }

@@ -3,6 +3,7 @@ package controllers
 import (
 	"WayhaSMS/api/presenter"
 	"WayhaSMS/pkg/entities"
+	"fmt"
 	"os"
 	"time"
 
@@ -15,7 +16,6 @@ import (
 func AccessToken() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		var auth entities.Auth
-		var Failed bool = false
 		err := c.BodyParser(&auth)
 		if err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse("Unauthorization"))
@@ -25,14 +25,16 @@ func AccessToken() fiber.Handler {
 		if auth.Username != os.Getenv("my_username") {
 			return c.Status(fiber.StatusNotFound).JSON(presenter.AuthErrorResponse("Username Is Not Found"))
 		}
-		if matchPass := CheckPasswordHash(newPass, os.Getenv("my_password")); matchPass == Failed {
+		fmt.Println(newPass)
+		match := CheckPasswordHash(os.Getenv("my_password"), newPass)
+		if match == false {
 			return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse("Password Incorrect"))
 		}
 		token := jwt.New(jwt.SigningMethodHS256)
 		claims := token.Claims.(jwt.MapClaims)
 		claims[os.Getenv("my_username")] = identity
 		claims["admin"] = true
-		claims["exp"] = time.Now().Add(time.Minute * 5).Unix()
+		claims["exp"] = time.Now().Add(time.Minute * 60).Unix()
 
 		t, sigerr := token.SignedString([]byte(os.Getenv("signature")))
 		if sigerr != nil {
@@ -43,7 +45,7 @@ func AccessToken() fiber.Handler {
 }
 
 func HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 4)
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
 }
 
