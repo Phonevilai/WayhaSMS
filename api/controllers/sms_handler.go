@@ -4,9 +4,8 @@ import (
 	"WayhaSMS/api/presenter"
 	"WayhaSMS/pkg/entities"
 	"WayhaSMS/pkg/ltc"
-	"os"
-
 	"github.com/gofiber/fiber/v2"
+	"os"
 )
 
 func SMS() fiber.Handler {

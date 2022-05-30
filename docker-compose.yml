@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  billpayment:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "9000:9000"
+    env_file:
+      - "./dev.env"
+    environment:
+      - Go_ENV=development
+    volumes:
+      - "./share:/docker-entrypoint-initdb.d"
