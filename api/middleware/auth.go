@@ -9,7 +9,7 @@ import (
 // Protected protect routes
 func Protected() func(*fiber.Ctx) error {
 	return jwtware.New(jwtware.Config{
-		SigningKey:   []byte(os.Getenv("signature")),
+		SigningKey:   []byte(os.Getenv("SIGNATURE")),
 		ErrorHandler: jwtError,
 	})
 }

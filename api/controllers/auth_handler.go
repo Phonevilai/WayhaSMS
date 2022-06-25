@@ -3,7 +3,6 @@ package controllers
 import (
 	"WayhaSMS/api/presenter"
 	"WayhaSMS/pkg/entities"
-	"fmt"
 	"os"
 	"time"
 
@@ -22,21 +21,21 @@ func AccessToken() fiber.Handler {
 		}
 		identity := auth.Username
 		newPass := auth.Password
-		if auth.Username != os.Getenv("my_username") {
+		if auth.Username != os.Getenv("USERNAME") {
 			return c.Status(fiber.StatusNotFound).JSON(presenter.AuthErrorResponse("Username Is Not Found"))
 		}
-		fmt.Println(newPass)
-		match := CheckPasswordHash(os.Getenv("my_password"), newPass)
+		//fmt.Println(newPass)
+		match := CheckPasswordHash(os.Getenv("PASSWORD"), newPass)
 		if match == false {
 			return c.Status(fiber.StatusBadRequest).JSON(presenter.AuthErrorResponse("Password Incorrect"))
 		}
 		token := jwt.New(jwt.SigningMethodHS256)
 		claims := token.Claims.(jwt.MapClaims)
-		claims[os.Getenv("my_username")] = identity
+		claims[os.Getenv("USERNAME")] = identity
 		claims["admin"] = true
 		claims["exp"] = time.Now().Add(time.Minute * 60).Unix()
 
-		t, sigerr := token.SignedString([]byte(os.Getenv("signature")))
+		t, sigerr := token.SignedString([]byte(os.Getenv("SIGNATURE")))
 		if sigerr != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(presenter.AuthErrorResponse("Server Error"))
 		}

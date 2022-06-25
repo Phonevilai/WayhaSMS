@@ -12,7 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func SendSMS(r *entities.SMSReq) (string) {
+func SendSMS(r *entities.SMSReq) string {
 	encrypted := Encrypt(r.UserID, r.Trans_ID, r.MsisDN, r.PrivateKey)
 	agent := fiber.AcquireAgent()
 	req := agent.Request()
@@ -47,7 +47,7 @@ func SendSMS(r *entities.SMSReq) (string) {
 		// panic(errs)
 		fmt.Println(errs)
 	}
-	fmt.Println(string(body))
+	//fmt.Println(string(body))
 	var data entities.SMSRes
 	err := xml.Unmarshal([]byte(body), &data)
 	if err != nil {
@@ -59,7 +59,7 @@ func SendSMS(r *entities.SMSReq) (string) {
 }
 
 func Encrypt(userID string, Trans_ID string, MsisDN string, PrivateKey string) string {
-	cmd := exec.Command("java", "-jar", os.Getenv("encrypt_path"), userID+Trans_ID+MsisDN, PrivateKey)
+	cmd := exec.Command("java", "-jar", os.Getenv("ENCRYPT_PATH"), userID+Trans_ID+MsisDN, PrivateKey)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Fatalf("cmd.Run() failed with %s\n", err)

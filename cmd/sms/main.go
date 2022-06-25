@@ -18,7 +18,7 @@ import (
 )
 
 func init() {
-	err := godotenv.Load("dev.env")
+	err := godotenv.Load("local.env")
 	if err != nil {
 		log.Printf("please consider environment variables: %s\n", err)
 	}

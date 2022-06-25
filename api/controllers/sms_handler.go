@@ -15,11 +15,11 @@ func SMS() fiber.Handler {
 			return c.Status(fiber.StatusBadRequest).JSON(presenter.SendSMSErrorResponse("REQUEST BODY IS INVALID"))
 		}
 		q := entities.SMSReq{
-			PrivateKey: os.Getenv("privateKey"),
-			UserID:     os.Getenv("userid"),
+			PrivateKey: os.Getenv("PRIVATE_KEY"),
+			UserID:     os.Getenv("USER_ID"),
 			Trans_ID:   reqData.Trans_ID,
 			MsisDN:     reqData.MsisDN,
-			HeaderSMS:  os.Getenv("headerSMS"),
+			HeaderSMS:  os.Getenv("HEADER_SMS"),
 			Message:    reqData.Message,
 		}
 		resultSMS := ltc.SendSMS(&q)
